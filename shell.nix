@@ -7,9 +7,31 @@
   }
 }:
 with pkgs;
+let
+  neovimPythonPackages = p: with p; [
+    jedi
+    flake8
+    black
+    pylint
+  ];
+  neovim = pkgs.neovim.override {
+    extraPython3Packages = neovimPythonPackages;
+    withPython3 = true;
+    withNodeJs = true;
+  };
+in
 mkShell {
   buildInputs = [
-    neovim-nightly
+    # Customized packages
+    tmux
+    git
+    nixpkgs-fmt
+    python
+    python3
+    neovim
+
+    fd
+    ripgrep
     nodePackages.diagnostic-languageserver
     nodePackages.json-server
     nodePackages.pyright
